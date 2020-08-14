@@ -1,0 +1,482 @@
+<!doctype html>
+<html style='font-size:16px !important'>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>平行漫游</title><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; tab-size: 4; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; overflow-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 40px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror-linenumber { user-select: none; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 32px; padding-right: 32px; padding-bottom: 0px; break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none 0s ease 0s; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+svg[id^="mermaidChart"] { line-height: 1em; }
+mark { background: rgb(255, 255, 0); color: rgb(0, 0, 0); }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+mark .md-meta { color: rgb(0, 0, 0); opacity: 0.3 !important; }
+
+
+/* Fira Code */
+/* 全局属性 */
+::selection {
+	background:#b981d1;
+	color:white
+}
+::-moz-selection {
+	background:#b981d1;
+	color:white
+}
+::-webkit-selection {
+	background:#b981d1;
+	color:white
+}
+
+html {
+  background-color: #f6f6f6;
+}
+#write {
+  max-width: 914px;
+  font-size: 16px;
+  text-align: left;
+  letter-spacing: 0px;
+  font-family: "Fira Code", "微软雅黑","PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/*段落*/
+#write p {
+  font-size: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin: 0;
+  line-height: 26px;
+  color: black;
+}
+
+/*  todo item 对齐 */
+#write input[type="checkbox"] {
+  margin-top: calc(1em - 2px);
+  margin-right: 5px;
+  left: -3px;
+}
+
+/*标题*/
+#write h1,
+#write h2,
+#write h3,
+#write h4,
+#write h5,
+#write h6 {
+  margin: .5em 0;
+  padding: 0px;
+  font-weight: bold;
+  color: black;
+}
+#write h1 {
+  font-size: 2rem;
+  /* text-align: center; */
+}
+#write h2::before{
+  content: "✔";
+  font-weight: bold;
+  color: #ffb11b;
+  margin-right: 4px
+}
+#write h2 {
+  font-size: 1.7rem;
+}
+#write h2 span {
+ font-weight: bold;
+ color: #333;
+ padding: 3px 10px 1px;
+}
+
+#write h3 {
+  font-size: 1.5rem;
+}
+#write h4 {
+  font-size: 1.25rem;
+}
+#write h5 {
+  font-size: 1rem;
+}
+#write h6 {
+  font-size: 1rem;
+}
+
+/* 列表 */
+#write ul,
+#write ol {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 25px;
+  color: black;
+}
+#write ul {
+  list-style-type: disc;
+}
+#write ul ul {
+  list-style-type: square;
+}
+#write ol {
+  list-style-type: decimal;
+}
+/* 列表内容 */
+#write li section {
+  font-size:15px;
+}
+
+/* 字体加粗 */
+#write strong::before {
+  content: '「';
+}
+
+#write strong {
+  color: #E49123;
+  font-weight: bold;
+}
+
+#write strong::after {
+  content: '」';
+}
+
+/*引用*/
+#write blockquote {
+  margin-bottom: 16px;
+  margin-top: 16px;
+  padding: 10px 10px 10px 20px;
+  font-size: 0.9em;
+  background: #fff9f9;
+  border-left: 3px solid #ffb11b;
+  color: #6a737d;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#write blockquote p {
+  line-height: 26px;
+}
+
+/* 超链接 */
+#write a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #E49123;
+  border-bottom: 1px solid #E49123;
+}
+
+/* 分割线 */
+#write hr {
+  height: 1px;
+  padding: 0;
+  border: none;
+  text-align: center;
+  background-image: linear-gradient(to right,rgba(231, 93, 109,0.3),rgba(255, 159, 150,0.75),rgba(255, 216, 181,0.3));
+}
+
+/* 行内代码 */
+#write p code,
+#write span code,
+#write li code {
+  font-size: 15px;
+  word-wrap: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  color:  rgb(235, 76, 55);;
+  background-color: rgba(27,31,35,.05);
+  word-break: break-all;
+}
+
+/* 文章插图 */
+#write img {
+  display: block;
+  margin: 0 auto;
+  width: 85%;
+  max-width: 100%;
+  border-radius: 5px;
+  box-shadow:0px 4px 12px #84A1A8;
+  border: 0px;
+}
+
+#write table tr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  background-color: white;
+}
+#write table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+#write table tr th,
+#write table tr td {
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: left;
+}
+#write table tr th {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+
+/* 上角标 */
+#write .md-footnote {
+ font-weight: bold;
+ color: #E49123;
+}
+#write .md-footnote > .md-text:before {
+ content: '['
+}
+#write .md-footnote > .md-text:after {
+ content: ']'
+}
+
+
+/* 下角标 */
+#write .md-def-name {
+  padding-right: 1.8ch;
+}
+#write .md-def-name:before {
+  content: '[';
+  color: #000;
+}
+#write .md-def-name:after {
+  color: #000;
+}
+
+
+/* 代码块主题 */
+code, .md-fences {
+	padding: .5em;
+  background-color: #292b35;
+	border: 1px solid #ccc;
+	padding: .1em;
+	border-radius: 5px;
+	margin-left: 0.2em;
+  margin-right: 0.2em;
+  font-family: "Fira Code", "微软雅黑","PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.md-fences {
+  margin: 0 0 20px;
+  color: rgb(236, 236, 236);
+	/* font-size: 1em; */
+	padding: 0.3em 1em;
+  padding-top: 0.4em;
+  box-shadow: 0px 4px 9px grey;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+  margin-left: 5px;
+  border-left: 1px solid #F8F8F8;
+  z-index: 5;
+}
+.CodeMirror-code{
+  margin-left: 5px;
+}
+.cm-s-inner .cm-keyword {
+  color: #c792ea;
+  font-weight: 450;
+}
+.cm-s-inner .cm-operator {
+  color: #89ddff;
+}
+.cm-s-inner .cm-variable-2 {
+  color: #eeffff;
+}
+.cm-s-inner .cm-variable-3,
+.cm-s-inner .cm-type {
+  color: #f07178;
+}
+.cm-s-inner .cm-builtin {
+  color: #ffcb6b;
+}
+.cm-s-inner .cm-atom {
+  color: #f78c6c;
+}
+.cm-s-inner .cm-number {
+  color: #ff5370;
+}
+.cm-s-inner .cm-def {
+  color: #82aaff;
+}
+.cm-s-inner .cm-string {
+  color: #c3e88d;
+}
+.cm-s-inner .cm-string-2 {
+  color: #f07178;
+}
+.cm-s-inner .cm-comment {
+  color: #676e95;
+}
+.cm-s-inner .cm-variable {
+  color: #f07178;
+}
+.cm-s-inner .cm-tag {
+  color: #ff5370;
+}
+.cm-s-inner .cm-meta {
+  color: #ffcb6b;
+}
+.cm-s-inner .cm-attribute {
+  color: #c792ea;
+}
+.cm-s-inner .cm-property {
+  color: #c792ea;
+}
+.cm-s-inner .cm-qualifier {
+  color: #decb6b;
+}
+.cm-s-inner .cm-variable-3,
+.cm-s-inner .cm-type {
+  color: #decb6b;
+}
+.cm-s-inner .cm-error {
+  color: rgba(255, 255, 255, 1);
+  background-color: #e9405c;
+}
+
+
+</style>
+</head>
+<body class='typora-export os-windows' >
+<div  id='write'  class = ''><h1><a name="平行漫游" class="md-header-anchor"></a><span>平行漫游</span></h1><div class='md-toc' mdtype='toc'><p class="md-toc-content" role="list"><span role="listitem" class="md-toc-item md-toc-h1" data-ref="n0"><a class="md-toc-inner" href="#平行漫游">平行漫游</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n2"><a class="md-toc-inner" href="#地球">地球</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n16"><a class="md-toc-inner" href="#太空">太空</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n41"><a class="md-toc-inner" href="#虫洞">虫洞</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n64"><a class="md-toc-inner" href="#深海">深海</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n86"><a class="md-toc-inner" href="#雨林">雨林</a></span><span role="listitem" class="md-toc-item md-toc-h3" data-ref="n103"><a class="md-toc-inner" href="#坠毁">坠毁</a></span></p></div><h3><a name="地球" class="md-header-anchor"></a><span>地球</span></h3><p><span>人类需要前往太空，一切都准备就绪了。能够自我繁殖的机器人，能够构建躯体的基因技术，能够实现跃迁的曲率引擎，以及完全基于二进制的意识存储。</span></p><p><span>地球将在不久之后灭亡，这艘飞船将带着无数独立的飞船向无限地方向前行，一艘船，一个人，无限克隆，一生寻找可能的未来。只要找到下一个栖息地，那么地球的一切都可以重新来过。</span></p><p><span>这项任务的危险程度比他想象得更加危险，复杂的系统工程甚至需要从大公司中专门做统筹和物流的顶尖人才，这中间牵扯到太多的专利，禁运和各种火上浇油的政治斗争，所幸，接触到项目真实目的的人们都知道，这是一项需要消除偏见奉献一切的工程奇迹，如果不是这样，人类好不容易建立起来的文明只会是一场梦。</span></p><p><span>博士说：“虽然我飘泊在外这么多年，尽管这个项目看起来就是一个浪漫的自杀仪式，我却出乎意料地有了归属感。”</span></p><p><span>现在的他已经三十七岁了。他曾经是特斯拉的火箭工程师，他也当过潜水员，滑雪教练和地质学家，他至今为止的最后一份工作是在冰岛的火山口勘探地形，不出意外，他再次厌倦了这个令他感到寒冷的世界。去往太空之前，他做好了一切准备。他来到了奶奶的屋子，那里仍然放着母亲爱听的黑胶唱片，只要一听到母亲爱听的音乐，他就会快乐得像一只蝉，他打点好奶奶所有的生活琐事，亲吻了奶奶满是皱纹的手面，然后把过去乖巧的自己放在了这间衰颓的屋子里。</span></p><p><span>博士对自己说：“如果我回来的话，我仍然会从她这里取回乖巧可爱的自己，做回她的孙子。”</span></p><p><span>博士的叹息声中想起了过去。他还记起了他和母亲的最后一面，她一直在外漂泊流浪，最终在病重的时候回到了这里停靠在了博士的臂弯，那是最后与她告别的时刻。</span></p><p><span>“我看到她伫立在纷飞的落叶里。”那时候纽约的中央公园已经成了动物园，但是雪花隐藏了一切纷争的痕迹，她就站在破落的旧帐篷前面，对着升起的太阳微笑。她呼出的气息就像是雾霭，博士紧贴着她，没想过未来会分开。后来博士的母亲很自然地去世了，博士曾经在母亲的墓前俯下身躯，向着神明祷告：“如果它能够听见我的声音，我希望他告诉该如何活下去，如果不能的话，我也能放心去地狱了。”</span></p><p><span>博士已经做好了死的准备，但准备好死解决不了任何工程问题，前一次的半级曲率实验中，飞船因为无法逃脱黑洞而不可避免地坠入了宇宙的深渊。舱体发生了爆炸，减流板开始扩张，粘附的沙砾开始溶解，因为无法挥发，热量极大聚集，渐渐被烫穿，急速的气压差让数个实验人员的皮肤瞬间破裂，剧烈失血，然后结冰，到了最后，信奉科学的实验人员也只剩下了一遍遍地喊着：“神啊，救救我，神啊，救救我。”</span></p><p><span>就算知道了这些博士也永远像个蹦蹦跳跳的“小孩”，他并不知道死亡对于人类的真正意义，地球对于宇宙来说都太渺小了，何况这几条生命，但自从他的母亲去世之后，博士确实更成熟安静了一些。</span></p><p><span>当地球的核心信息被完整记录下来，飞船实验也进入了最后的阶段，博士写了一封遗书，很漂亮的字体和版式，然后丢进了草坪外烧垃圾的火堆里，烧毁的时候博士默念着离开地球之前要做的事情。他打扫完了屋子，付清了账单，甚至还出去跑了五公里。已经做好决定的事情就没什么可以眷恋的，唯一可以选择的只有前方的路，博士忍不住为自己过去的所作所为自责，他没有好好抓住时光，在过去一些最棒的年纪里白白浪费时间。博士抛却了人类所有的恐惧与欲望，直面空洞，一个贯穿人生的巨大空洞。人们常说人类爆发勇气的时刻是间于愤怒与恐惧之间。</span></p><p><span>灵魂被清空的人类，格外适合当一个工具。如果实验成功了，他驾驶的飞船将会采撷到了一抹仙女星座的灰尘，那灰尘很重，重到可以让亚马逊爆发了一场风暴，那将是地球的未来。不论未来授予我何种荣耀与成就，如果失去这次机会，我的余生都将被一种兴味索然的情绪和错失良机的认知所困扰。</span></p><p><span>博士就此踏上旅程。</span></p><h3><a name="太空" class="md-header-anchor"></a><span>太空</span></h3><p><span>当他洗澡的时候越来越感受到呼吸困难。他的心脏所在的胸口在黑暗之中会发光，有一种说法，当这种人工心脏遇到水太久，心脏也会渐渐冷却。</span></p><p><span>“我最近经常头痛，不能集中精力想事情，脖子也很酸痛，有时候一早醒过来也会什么都看不见，过一会儿才会好转，这种情况越来越常见了。”</span></p><p><span>“所有的都是数据结论，并没有相关的研究。因为长期处于低重力，你已经失去了人体20%的肌肉组织，骨密度也降低了1.5%。”</span></p><p><span>因为血液没有了重力的拖拽，在同样马力的心脏驱动下，博士的血压一直偏高，脑袋上总是青筋暴露，好像一用力，那奔涌的血液会击穿动脉，整个人都会不受重力的束缚飞向翱翔的宇宙。博士渐渐无法控制情绪，尽管他面容一成不变，他有时会忍不住对Corna抱怨，他希望有一天真的被突然出现的超重力压碎骨头或者牙齿，这样他就解脱了。</span></p><p><span>“你的身体情况比我想象的要严重得多。”</span></p><p><span>博士现在是在黑暗中狂舞，脚下都是荆棘。洗完澡的他一直在接受药物注射安定，他已经三天没有睡觉了，他的认知功能开始出现诡异的状态，经常露出了莫名其妙的笑容，对着设备自言自语，甚至开始舔舐仪器来尝试交流，这是小孩子都不会做的事情。博士的四肢也萎缩得厉害，似乎身体的伤害已经摧毁了他的心智，而这种折磨将会在他的无尽的克隆人身上一遍遍出现。</span></p><p><span>人工智能好像知晓所有的笑话，甚至会拿前女友的SNS内容来嘲笑博士，当然了，她比博士还了解博士的一生。</span></p><p><span>Corna：“如果你不想在空中死去，你得在人工重力中好好负重。”</span></p><p><span>博士：“肌肉萎缩到这种程度会怎么样？”</span></p><p><span>Corna：“还要三个月。”</span></p><p><span>博士：“三个月什么？”</span></p><p><span>Corna：“你就可以见到你父母了。”</span></p><p><span>博士：“那也不错啊，起码不用担心一家人再失散了。”</span></p><p><span>除了和Corna进行永无止境的聊天，博士唯一的乐趣便是探索星球，这种一种远古的乐趣，只要引力合适，他便会降落到星球表面勘测地形，如果这个星球还有地面的话。</span></p><p><span>博士从来都喜欢手动操作，他耗费着好不容易收集的宇宙电子流，推进加速绕过了如波涛在涌动的山峰。引擎的喷口灵活旋转，箭头形状的飞船滚动着掠过一片小行星云的彩幕，星球上灼热的火山就像是烟花一样不定时地在天空中爆炸。他控制飞船降落，跟随着Corna设定的信标。信标的信号和全部航行数据全都会直观地展现在交互面板上——稳定的信息流直接投射到他的视网膜。</span></p><p><span>穿过云层以后，他从开阔的赭石上方飞驰而过，天光在地面的反射下格外刺眼。他的飞行高度极低，飞船的尾流掀起地面的金属雾。前方的山脉崎岖，粉褐色的岩石被风刻成尖锐的峭壁，棱角分明，如同海底长出的珊瑚礁。</span></p><p><span>信标通信阈值降低，信号灯正在疯狂地闪烁。博士将推进器喷口扭转到了制动角度，机头上抬，机身侧向摇摆，准备降落。他的下方是一块高地，旁边是一道高高的粉色悬崖。</span></p><p><span>突然间，几乎所有的警报信号灯亮了起来，事情很不寻常，博士紧张了起来，感应检测之外似乎还有可以穿透一切的畸变磁场。偶然发出的随机数据也无法寻找规律，就像一个幽灵。</span></p><p><span>“关闭感应防护，火箭全功率怠速。”</span></p><p><span>Corna奉命执行。瞳孔投射的图像切换到了飞船的主探测系统数据流。只能看到一条幻影般的轨迹，没有确定的质量或密度。</span></p><p><span>“下次磁场畸变前赶紧离开，切换手动模式，找准时机。”</span></p><p><span>博士看着不断上扬的磁场数据，只在等待一个可以让他活着的信号。</span></p><p><span>“希望脑袋上的血管不要爆掉。”</span></p><p><span>博士在宇宙这么大的一片泥潭里求救了那么久，只是希望换来一场血红色的“雨”。</span></p><h3><a name="虫洞" class="md-header-anchor"></a><span>虫洞</span></h3><p><span>火箭升腾起，黑暗的粒子云高速涡流急速扰动，穿梭在星体和卫星之间，躲在行星后的黑洞随时准备吞噬这座偶然降落的小星球。火箭喷发的巨量尾部燃料让地面变成了钻石，借助引力波，将自己推向虚无的未来。</span></p><p><span>死亡从来不是一个定量，也许博士的轨道意料之中出了意外，在高速公路上驶入了岔路，下一个路口也遥遥无期，但博士仍然存在于世界的体系里，只是在次元中迷失了。</span></p><p><span>在时间流中，博士可以跟上帝哥哥打牌，上帝身边还有着一个长头发的小花童，偷偷斜眼看着上帝意欲逃跑。寿命只是博士满足好奇心的介质，如今的博士也才二十八岁，他已经把年轻岁月留在四维弧形的平原上，留在种种谜团中间。</span></p><p><span>“是这个时刻了。</span></p><p><span>那是虫洞，就像夏日的蒲公英，飘忽着在太空游荡，穿过了飞行器的内部。舷窗外的一条条光线改变了色相。飞船的飞射引擎，在船体外围制造了扭曲时空的球面，使其能够以过隙的速度滑行在亚空间的近地层，如同石块划过湖水表面的同时不受到水流和水体表面张力阻滞。</span></p><p><span>作为一个理性的人，博士永远会提醒自己不要被眼前的景色所蒙蔽。</span></p><p><span>“如果我从过去消失来到现在，那么我的身体就变成了光。”</span></p><p><span>那是可以让人忘却蓝天的冰风暴，在风暴中，博士仿佛陷入了一场伴有刺痛的麻醉，永远无法从这寒冬中醒过来，所有的机能都暂时停下了。博士半睁开眼睛，保证自己还没有死去。声音变得奇妙，能够听到血液流过心脏，内耳的神经好像在嘶嘶作响，鼻吸气又好像在大声喊叫，孤独，无人交流，黑暗绝对静音的环境，当你转头看着周围的一切，你的骨头会产生磨损噪音。</span></p><p><span>重力错乱了，这里的一切都诡异异常，是谁开了加速粒子，重力跟着粒子旋转，所以每过三亿分之一秒，就会有一次重力的陡峰出现，重力在奇点中飘荡无法着陆，时空的连续阵列里，所谓的未来不会站在那里等你，时间在流动，光线逐渐黯淡，相位波长渐渐失去了聚焦。</span></p><p><span>他的内心在一遍遍呼喊。</span></p><p><span>“我不想我的一生都被拴在回忆里。”</span></p><p><span>博士在飞船的模拟空间里释放了人形机器人，用可视光线的波长眺望着此刻诡谲的太空，但传感器好像坏掉了一样，在孤独黑暗中寻找着光亮，太空中哪里来的铁锈味，机器人把脚挂在了宇宙飞船的扶梯架上，站在了飞船顶部，感受离心力，绝对的安静。</span></p><p><span>“回声的瞬间是时间线最后的时刻。”</span></p><p><span>纺锤已经到了最后一根线，所以的牵连都在这跟丝线上与所有的可能重合在一起，也就是说，这是唯一的时刻，拉住它，一切都可以回头。时间正在减慢，风暴眼正在坍缩，一些信息逃过了引力，在与原先宇宙的原子核触碰时，游离的光子会在引力的指挥下一闪一闪，仿佛是生命的寂灭变成了摇滚乐，博士听到了土星环上的碎片碰撞蒸发成电离子气的声音，错乱的未来影像在博士周围弥漫，他想看清未来，但永远不可能看清。</span></p><p><span>博士回忆起了母亲，他在水中挣扎，岸上的牧羊犬狂吠不止，是母亲把他从水底拉了上来。远方的朝阳美极了，游泳池里漂浮着很多落叶，博士浑身发热，那个早晨博士吃了一大罐炼乳。他骑车摔倒的时候，同样是母亲扶起了他，是母亲亲吻了博士那流泪的眼睛。</span></p><p><span>在霞光之中，他看见母亲回头了，不再是模糊的面容。</span></p><p><span>“谢谢你救了我。”</span></p><p><span>“因为总惦记着你，也同样拯救了我。”</span></p><p><span>母亲曾经对着博士说过：“数年之前，这副身躯曾经是孩子，如今，这里有变成了大人，每每这样的夜晚都让我惊讶，如果人有真正的自我，故去的灵魂能够出现的话，一定是在这样的夜晚出现， 我亲爱的孩子，过去那个属于孩童的灵魂，还在你心里吗？”</span></p><p><span>看那个彩霞，绚烂得像是要发生不好的事情。博士挽住了母亲年轻的脸庞。</span></p><p><span>“你为什么也会哭泣？”</span></p><p><span>“不用担心，人们偶尔也会这样。”</span></p><h3><a name="深海" class="md-header-anchor"></a><span>深海</span></h3><p><span>半个卫星陨落在山峰的角落，露出了深陷的地壳，源源不断的岩浆地表撕裂的封口喷出、凝固，继而再喷发、凝固，地底的岩浆犹如真菌一般在在地球表面不断“繁衍”。</span></p><p><span>曾经的大海，是地球上最柔软的寒冷地带。曾经的海边，岛屿的大部分地方都是红色的泥土，有几株耐干旱的面包树，遍地都是仙人掌，到了季节，便会有一群群火烈鸟在盐滩中散步猎食，你没有办法在岸边久坐，地上都是细小的甲壳动物，它们呈现出的深红色完美地隐匿在尘土之中。</span></p><p><span>如今的海岸边到处都是机械残骸，它们曾英勇战斗过，换来的不过是残破的现状和无法被埋葬的命运。或许总有一天这些会随着地球的消亡而陨灭，只是对于人类的历史而言而言，这种未来还久得太久。深海最深处，矿机仍然不间断地工作着，巨大的履带、犁刀及螺旋状的滚筒日夜翻涌，像吸尘器一般将夹杂了矿石的沉积物吸入，无论是多么坚硬的金属结核、从热泉喷口喷出的多金属硫化物，以及覆盖在海底山上的富钴结壳，矿车都会用滚动链齿将海平面挖开，再通过好几公里长的垂直管道泵输送到海面上的矿船上，这些管道早就断了，它们只是在深海里生造了一个矿石瀑布而已。</span></p><hr /><p><span>“我小时候因为潜水，巨大的耳压让我的一只耳朵失去了听力，我把所有储藏的声音都留在了深海里，所以在深夜的时候，我总是能够听到海底的声音。”</span></p><p><span>海风从海面划过，生命之源已经腐烂。带着氤氲的水汽和海洋生物腐败的气味，巨型礁石俯瞰着银色蓝色交融的夜晚，博士沿着岛屿航行，直到看见了废旧的仓库。仓库的大门紧闭，藤蔓长满了大门，浇上汽油之后，两扇巨型大门也轰然倒地，仓库里满是各种潜水器材，几个伙伴给钢瓶里灌进了新制的氧气，各自拿着潜水服和照明设备潜入了这该死的深渊，一个巨大无比的矿坑。</span></p><p><span>博士一行人还是要继续探索，去追寻那可挖掘的地下城市，企图恢复过去的世界。</span></p><p><span>他们的脚部全部绑了配重，呼吸管有一股难闻的鱼腥味儿，是海水干涸之后的味道。他们沿着工厂的外围潜游，各种海草的尸体沉在海底，地表也有无数的烷类，只需要轻轻踏在上面，便会有无数的可燃气泡冒出。海底的水中悬浊粒很多，博士头罩上的灯光照不了多远。小队沿着矿坑不断下潜，时常会遇见各种生锈的矿厂大型机械，队员们不敢触碰任何一样器物，生怕生锈的钢铁弯折给这片海域带来难以估量的震动，从而引发更多难以想象的后果。</span></p><p><span>等到终于降落到了矿坑底部，博士一行人很快失望了，底部什么沉积物都没有，只有无数的生活垃圾堆积在一起，不过有一件事让博士心头猛跳了一阵，地面上一点淤泥都没有，这里的过滤体系仍然在运转，博士立刻兴奋起来，他立马上岸换上了硬壳潜水服，隔离了皮肤受力面，增压，顺着海钩的缝隙，一直往下前行，再下去说不定能找到过去地壳运动前的海底地堡。</span></p><p><span>小队里也不会再有第二个博士跟着他去送死了。如果全都死在这里，没有人的未来科技也不再是人类的未来了。</span></p><p><span>……</span></p><p><span>此刻博士已经到了最深处的海底，一切又回归到地球数亿年前不经修饰的阴森可怖中，从深渊带开始，就已经一点阳光都照射不到了，海洋完全是漆黑一片，头带灯的光幕中常常飘过恶魔一样的生物，加之千倍于海面的压力，如此贴近地球中心的海底，却好像飞向了宇宙。</span></p><p><span>海底全是一点点被分解再分解再分解的有机物残骸，最终它们将沉到更深的地底，静谧地躺在那里等待千百万年后的重新变成地球坚硬的部分。也许这里才是整颗星球上的生命起源和结束的地方，生命以颗粒的形式终结在这里，而最早的有机物又可能是诞生在这儿。生命最后都会变成雪花，落到海洋的最深处，好像银色的暴风雪一样。</span></p><p><span>除此以外，空无一物。</span></p><p><span>在这里，一切细微的声音，甚至于大串气泡产生的波纹与震动在鱼类看来就像是马路中间的发动机一样喧闹。氧气快耗尽了，博士慌忙地上潜，因为上浮的速度过快，溶解于体液中的氮气变成气泡引发了栓塞。</span></p><p><span>氮醉，仙境般的幻觉令人着迷，却也是最恐怖的状况，博士如同回到母体中睡着了一般。他仿佛找到了一种叫做“生命总开关”的东西，这种东西会让人解放人在海中的潜能。</span></p><p><span>慢慢上浮，眼前突然有了光，突然五六条鲨鱼从博士的身边游过，无数光线像是凌乱的茧丝一样从海平面沉降，令人兴奋的是，这些丝线就在身边流动，从非常遥远的地方来到这里。突然，在这星光点点的海底宇宙中，有数十万条银色的沙丁鱼出现，他们像是螺旋的基因被电解而错乱纷繁，忽上忽下又积聚冲散，人群中拥挤的不安在这里全然被翩飞的思绪搅乱，一万片银色的羽毛在身旁环绕，博士忘了呼吸。</span></p><p><span>一只小鱼在博士的鼻尖的地方停留下来，博士渐渐清醒了过来，它好像完全不害怕博士，他们对视着，在它眼前博士是不是一只减肥的恐龙，还是一条宇宙飞船。博士忍不住去追逐，却被乱流冲散。</span></p><p><span>终于，硬壳的防护服在靠近水面的地方解体了，博士的心脏跳动缓慢了下来，脑血管生疼，血液流动好像也慢了下来，胳膊也没有了力气，拳头般大小的肺渐渐恢复，只是耳朵仍然在嗡嗡作响。</span></p><p><span>博士露出了水面，身上已经挂满了变种的海藻，以石油共生的海藻在阳光下好像美人鱼的鳞片。博士回到了队伍里，仍然没有发现可挖掘的地下城市，回想着刚才的片段，博士站在海滩上眺望无尽的海平线。</span></p><p><span>无数泄露的石油漂浮在海面上，不断有腐烂几近骨架的尸体被冲上海岸，海岸也形成了一种新的生态，无数蠕虫开始在尸体间繁衍，每当风暴过后，海岸又会重回整洁，然后继续往复循环。落日余晖完全落入了大海，博士手持着燃烧瓶，然后扔向了大海，不完全燃烧涌起的滚滚浓烟瞬间在海面蔓延开来，石油的聚积面并不大，燃烧并没有持续多久，但就是这些瞬间，天空中满是烟尘，天色变得更加幽暗，落日的余晖与熊熊燃烧的海面相互映衬，好像天边的大火真的燃烧到了这里，一阵大浪之后，世界似乎完全变黑了。</span></p><h3><a name="雨林" class="md-header-anchor"></a><span>雨林</span></h3><p><span>博士不是无缘无故到这里的，他从来没有跟别人谈论过他来这里的理由，他总是独自工作，生病了也会遥控指挥伐木工作，一日也未曾停歇过。他所有的日常物品都通过快递，开过来的铃木越野车还躺在仓库的角落，遮阳罩下的发动机机油因为天气湿润已经开始变性，散发出苍老的味道。数个月之前他被滚刀除枝剔除的树干穿过了腰部，皮肉里残留着很多木头碎屑，止血时他给自己申请了做手术的临时器械和机械臂，就算这种时候他也是硬生生熬了四天，他本应该申请保险额度内的人工救援，半个小时后就会有人给他遥控做手术，可他没有这么做，运输的盒子上甚至都没有加急单号，这里没有信号塔，无人机只能通过图形处理器慢腾腾地识别山岭走出了一条蜿蜒的救护之路。</span></p><p><span>这里是“荒凉之地”，他这么做很容易让人想到他是为了惩罚自己才如此离群寡居。</span></p><p><span>中午，恢复健康的大叔在森林里面挥洒高压水枪给巨型伐木机器人洗澡，太阳很好，阳光下，喷洒的水雾弥漫着彩虹般的浪漫氛围，之后便控制着巨型的伐木机器人干活儿了。伐木机器人的名字叫做哈迪，人们常说，你不能给一个机器人取名字，因为那会产生依赖感，机器人总要更新换代，那不是人类好几十年才会更新一次，我们应该避免离别的痛苦而只叫他机器人，但是，抱歉，他只此一人，甚至连一条多余的狗都没有。</span></p><p><span>伐木机长着两个大钳子夹持树木，着地的脚掌上有着无数切割树枝的悍刃，动力装置液压驱动，一前一后地两只巨型机械臂，仿佛是远古的幽灵嵌入了这有如粗粝尘土长满苔藓的生钢机器人身上，顶头上坐着的正是大叔本人，他叼着烟，眼睛是平凡的颜色，容貌是平凡的表情，全身上下都被长长的动物毛皮所覆盖，颈部周围有一圈厚厚的毛领子，眉毛上长了霜。</span></p><p><span>每当干完活儿，博士就会在白天劳作的空地上堆出篝火旁，一边喝着啤酒，直到深夜飓风的来临，他才会退回到固定的地下居所。</span></p><p><span>这是一个独特的雨林，有着极为神秘的生态架构，森林最陡峭的深处藏着一个深窟，其孔洞里有着各种沼气和岩浆。沼气和岩浆分别从底下的数个孔洞汇聚又分开，就好像是地球的心脏瓣膜一样，有一条静脉线-氢气，有一条动脉线-岩浆，它们在洞窟里面汇合，爆炸，然后又循环往复。原始森林的巨量氧气是天然的助燃剂，只是洞窟的面积很有限，爆炸并不会造成什么严重的后果，所以在森林洞窟周期性的爆响之余，便会有强劲的风吹拂过整片大地，二氧化碳浓度变高后，洞窟外的树木格外茁壮，甚至有些妖艳的地步，大多数的植物的根茎都极为强壮，以应对间歇性的强风，时有皑皑白雪的森林只有这一片忽而如盛夏，转瞬间变化作冰霜。</span></p><p><span>博士的警示器响了，森林深处又要喷发一次了，博士赶忙躲进了伐木机机壳里。博士把啤酒一饮而尽，抬起了眼眸细眯着眼睛看着天空的云朵，一片火光闪过了天空，好像越来越近了。</span></p><p><span>“又一颗陨落。”</span></p><p><span>那一片火光并不是来自流星，在遥望这片雨林的遥远太空里，在这2197的前夜，有一个卫星在天空和太空残骸撞上了，为了自救，它利用了残余的驱动余量来到了地球，降落在了这片森林之上。</span></p><p><span>人们不会理解卫星也会精神受损，或者是通信的宇航员一直与他聊天，总之它的思维变得奇特起来，因为数据受损，变量的指数级全部受到了破坏，满脑子全被1960年代的嬉皮士精神塞满了，它既不想煽动机器人反叛人类，又没有蠢到做一个老实的工业机器人，它唯一想做的就是见识这个充满变量的世界，或者它自己也是变量的一部分，影响着世界变量的走向，想到这里，它甚至有些兴奋，与速度无关。它降落在寒冷的尖刺森林，巨大的冲击让一处山峰被削平，好像热武器时代的平山轰炸一般，无法完全消除的竖直动量转化极为有限，地表间弹跳每次接触地表都会扫平一片林木，好像森林的斑秃一样。激烈冲撞的末尾才从平缓地带的一侧滑行到另一侧，期间辗压过了无数爬行动物和低矮灌木。自然的奥妙之处就是它在枯萎后会再度生长，它在森林深处留下了它的艺术作品，也许数年之后的雨季会变成一条河流。</span></p><p><span>深窟的爆发之后耗尽了氧气，偏低的真空环境吸收着周边的气体，卷积着无数土木跟着进入了深窟里，卫星也是那个无辜的对象，卫星没有手可以抓爬地面，只能眼看着星夜离自己远去，堕入无尽地狱。</span></p><p><span>二选一，卫星进入了洞窟的氢气侧的深窟，它的嘴边冒着火花，每吐一口气，便会有剧烈的径向推进，旋转无可避免，爆燃的尾声再次被激发，它一路乘着风浪从暗无天日的深处回到了空气稀薄的洞口，它记得这里，这是它数秒之前进来的地方，尖锐的哨鸣声让震动加剧，急剧的气压变化让它的渗透层形成穿孔，喘振好像更强烈了，油压系统也瞬间真空化，悬浮的油滴雾化从气封的管道偷偷溜走，它的姿态像极了喝下了最后一杯candy of crush，它失去了反应能力，圆弧的轨迹预示着它即将落入了动脉侧的岩浆里，如果没有额外外力作用的话。</span></p><p><span>关键这些平凡的将死瞬间总会有人做些额外的事情，拯救从来不是一件需要思考的事情。</span></p><p><span>卫星的传感器感受到了力的压迫，滑落的瞬间是伐木机器人抓住了它。如果你很远处来到这个荒芜人迹又没有现场观摩整个过程，你会看见，数分钟之前，博士听见了异样的雪崩的声音，那天上的火光朝着森林深处飞去，紧接着博士便开着机器人马力全开，穿山破土来到了洞窟的前面，一个翻转的凌厉身手让他可以在空中划过美丽的弧线，从一侧跳跃，旋转180度之后伸手接住了稚子然后，在另一侧用手扒住悬崖外壁，不至于一起掉下去。恰巧是燃烧过后，超巨型风从身旁划过，带着无数误入附近的动物和卫星一起，回到地面。</span></p><p><span>在那个钟摆顶端速度近零的浪漫动作中，当电场以光速在量子芯片中传播，逻辑通道以10^46次每秒的速度传输着大量的是与非，电子在快乐的电场中很不规律地向一侧涌动，像是在大雪天遇见了送奶茶的初恋情人脸颊微微发热，芯片则像是核反应堆一样，烧穿了石墨，直接坠入了冷却风洞，卫星的心被伐木机器人撅住了。</span></p><p><span>“你能给我一株郁金香吗，现在我满脑子都是祖马龙的香味，只要一想到那种香味，我就能闻见夏天的味道，祖马龙是夏天开的吗？我大概是离开夏天太久了，很高兴认识你，伐木的大叔。”</span></p><h3><a name="坠毁" class="md-header-anchor"></a><span>坠毁</span></h3><p><span>新的城市建立了，旧的城市被抛弃，那里已经遍地是毒气，氧气制成速率越来越慢，雾霾之中，风吹城市的沙砾仿佛汹涌的大海，而摩天大厦仿佛是在大海中遨游的鲸鱼，城市焚毁后的灰烬在空无一人的街道附近席卷一切，仿佛贫困的死神在巡游徘徊，大厦里时不时传来滋滋的电流声，因为呼呼作响，早已失去绿树的城市外围“野兽”丛生。</span></p><p><span>有很多机械死在了充电的路上。你可以看见孤独的人在充电口旁边是否要继续充电，突然间他们就发现不想活下去了，也许活着是种折磨，是社会的阴谋。</span></p><p><span>卫星看着地球家园，真是奇妙，多么简洁的一颗星球啊。她一定想不到，为何在那冰冷的满是洞窟的星球，如此清冷却曾经有过这温厚烁华的苔藓，还有那冠绝山色的枫叶。</span></p><p><span>地球旋转，月球发光，宇航员的眼泪没有重力。</span></p><p><span>“也许我的意义就是为了带你来到这一刻。”</span></p><p><span>Corna诉说着对不起，Corna无法流眼泪，但她已经深深爱上了宇航员，她不会表达，在这样的时刻，没办法说出我爱你再告别。卫星即将坠毁在这颗陌生的星球之上，一场爆炸即将结束这一切。</span></p><p><span>他哀叹着死去，最后一口气从胸口缓慢地呼出他的最后一个选择是：原谅无能为力的自己。</span></p><p><span>宇航员扣押了卫星的记忆，关闭了感应，也许这样，卫星坠落时才不至于痛苦。</span></p><p><span>宇航员的飞船上一直有一个按钮。按钮所代表的地方，即明亮又平静，仿佛可以坠进无限宽广的柔软床铺，上午的人工阳光照射着略微干燥的房间，可以缓慢的躺下，不再理会仇恨和委屈，仿佛这些诡谲的宇宙粒子已经顺着记忆的缝隙流走。人们在这里睡去，灵魂在这温暖的空气里做着循环无尽的梦。</span></p><p><span>宇航员也希望把所有身躯丢进太空，在这最后的时刻，进入无限的电子境，层层嵌套，去选择不再爱与被爱。</span></p><p><span>在山间，有薄荷一样的风。</span></p><p><span>“我们都会消失，但是这个世界是有东西证明我们存在过。我知道我们从这里出发，却不一定要这里结束一切，我们可以有选择，我知道我的体内有多少夜存在过。”</span></p><p><span>宇航员做了那个选择，遁入了网络之中，也许在那里他能找到与他一起度过日与夜的卫星。</span></p></div>
+</body>
+</html>
